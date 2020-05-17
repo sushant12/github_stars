@@ -1,0 +1,6 @@
+<%= form_for @changeset, "/", fn f -> %>
+  <label>
+    https://www.github.com/ <%= text_input f, :username %>
+  </label>
+  <%= submit "get repositories >" %>
+<% end %>
