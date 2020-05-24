@@ -42,7 +42,9 @@ defmodule GithubStars.MixProject do
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+      {:httpoison, "~> 1.6"},
+      {:ex_link_header, "~> 0.0.5"}
     ]
   end
 
@@ -54,7 +56,7 @@ defmodule GithubStars.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+      "ecto.setup": ["ecto.create", "ecto.load", "run priv/repo/seeds.exs"],
       "ecto.migrate": ["ecto.migrate", "ecto.dump"],
       "ecto.rollback": ["ecto.rollback", "ecto.dump"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],

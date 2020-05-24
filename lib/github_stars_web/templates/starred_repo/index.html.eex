@@ -1,0 +1,24 @@
+<table>
+  <thead>
+    <tr>
+      <th>Repository</th>
+      <th>Description</th>
+      <th>Language</th>
+      <th>Tags</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for starred_repo <- @starred_repos do %>
+      <tr>
+        <td>
+          <%= link(starred_repo.name, to: starred_repo.github_url, target: "__blank") %>
+        </td>
+        <td><%= starred_repo.description %></td>
+        <td><%= starred_repo.language %></td>
+        <td><%= parse_tags(starred_repo.tags) %></td>
+        <td><%= link("edit", to: "#") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

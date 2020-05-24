@@ -16,8 +16,8 @@ defmodule GithubStarsWeb.Router do
   scope "/", GithubStarsWeb do
     pipe_through :browser
 
-    get "/", HomeController, :index
-    post "/", HomeController, :create
+    resources "/", HomeController, only: [:index, :create]
+    get ":user/starred_repos", StarredRepoController, :index
   end
 
   # Other scopes may use custom stacks.
