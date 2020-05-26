@@ -1,12 +1,11 @@
 defmodule GithubStars.User do
   use Ecto.Schema
   import Ecto.Changeset
-
   alias GithubStars.{Repo, StarredRepo}
 
   schema "users" do
     field :username, :string
-    has_many(:starred_repos, StarredRepo)
+    has_many(:starred_repos, StarredRepo, on_delete: :delete_all)
     timestamps()
   end
 
@@ -21,7 +20,9 @@ defmodule GithubStars.User do
   def create_user(attrs) do
     %__MODULE__{}
     |> changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert(on_conflict: :nothing)
+
+    get_user_by_username(attrs["username"])
   end
 
   def get_user_by_username(username), do: Repo.get_by(__MODULE__, username: username)

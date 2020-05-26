@@ -8,30 +8,10 @@ defmodule GithubStarsWeb.HomeController do
   end
 
   def create(conn, %{"user" => params}) do
-    User.create_user(params)
-    |> case do
-      {:ok, user} ->
-        redirect(conn, to: Routes.starred_repo_path(conn, :index, user.username))
+    user = User.create_user(params)
 
-      {:error, changeset} ->
-        conn
-        |> put_flash(:error, "username is already taken")
-        |> redirect(to: Routes.home_path(conn, :index))
-    end
+    Github.fetch_starred_repos(user)
 
-    # username = params["user"]["username"]
-
-    # {:ok, resp} = HTTPoison.get("https://api.github.com/users/#{username}/starred")
-    # {"link", str} = Enum.find(resp.headers, fn {h, v} -> h == "link" end)
-    # {:ok, parsed} = ExLinkHeader.parse(str)
-
-    # Enum.each(
-    #   2..String.to_integer(parsed.last.params.page),
-    #   &spawn(fn ->
-    #     IO.inspect(HTTPoison.get("https://api.github.com/users/#{username}/starred?page=#{&1}"))
-    #   end)
-    # )
-
-    # redirect(conn, to: Routes.starred_repo_path(conn, :index))
+    redirect(conn, to: Routes.starred_repo_path(conn, :index, user.username))
   end
 end

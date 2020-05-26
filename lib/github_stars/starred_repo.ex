@@ -9,7 +9,7 @@ defmodule GithubStars.StarredRepo do
     field :description, :string
     field :github_url, :string
     field :name, :string
-    field :ref_id, :string
+    field :ref_id, :integer
     field :language, :string
 
     belongs_to :user, User
@@ -25,16 +25,26 @@ defmodule GithubStars.StarredRepo do
   @doc false
   def changeset(starred_repo, attrs) do
     starred_repo
-    |> cast(attrs, [:name, :description, :ref_id, :github_url, :language])
-    |> validate_required([:name, :description, :ref_id, :github_url, :language])
+    |> cast(attrs, [:name, :description, :ref_id, :github_url, :language, :user_id])
     |> foreign_key_constraint(:user_id)
+    |> unique_constraint([:ref_id, :user_id])
     |> put_assoc(:tags, parse_tags(attrs))
   end
 
   def create_starred_repo(attrs) do
     %__MODULE__{}
     |> changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert(
+      on_conflict: :replace_all,
+      conflict_target: [:user_id, :ref_id]
+    )
+  end
+
+  def create_starred_repos(attrs) do
+    Repo.insert_all(__MODULE__, attrs,
+      on_conflict: :replace_all,
+      conflict_target: [:user_id, :ref_id]
+    )
   end
 
   def update_starred_repo(starred_repo, attrs) do

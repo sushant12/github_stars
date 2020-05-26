@@ -89,7 +89,7 @@ CREATE TABLE public.starred_repos (
     id bigint NOT NULL,
     name character varying(255),
     description character varying(255),
-    ref_id character varying(255),
+    ref_id integer,
     github_url character varying(255),
     inserted_at timestamp(0) without time zone NOT NULL,
     updated_at timestamp(0) without time zone NOT NULL,
@@ -311,6 +311,13 @@ CREATE UNIQUE INDEX starred_repo_tags_starred_repo_id_tag_id_index ON public.sta
 
 
 --
+-- Name: starred_repos_ref_id_user_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX starred_repos_ref_id_user_id_index ON public.starred_repos USING btree (ref_id, user_id);
+
+
+--
 -- Name: tags_name_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -352,5 +359,5 @@ ALTER TABLE ONLY public.starred_repos
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."schema_migrations" (version) VALUES (20200517070025), (20200518093611), (20200518093738), (20200518151016), (20200522021053), (20200522021414), (20200522024330), (20200522033522), (20200522033655), (20200522052245), (20200522053156), (20200522074558);
+INSERT INTO public."schema_migrations" (version) VALUES (20200517070025), (20200518093611), (20200518093738), (20200518151016), (20200522021053), (20200522021414), (20200522024330), (20200522033522), (20200522033655), (20200522052245), (20200522053156), (20200522074558), (20200526004322), (20200526031745);
 
