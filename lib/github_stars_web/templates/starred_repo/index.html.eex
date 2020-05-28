@@ -17,8 +17,47 @@
         <td><%= starred_repo.description %></td>
         <td><%= starred_repo.language %></td>
         <td><%= parse_tags(starred_repo.tags) %></td>
-        <td><%= link("edit", to: "#") %></td>
+        <td>
+          <button
+            class="starred-repo-edit-btn"
+            data-toggle="modal"
+            data-target="#exampleModal"
+            data-starred-repo-name="<%= starred_repo.name %>"
+            data-starred-repo-id="<%= starred_repo.id %>"
+            data-starred-repo-tags="<%= parse_tags(starred_repo.tags) %>">
+            edit
+          </button>
+        </td>
       </tr>
     <% end %>
   </tbody>
 </table>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          edit tags for <span id="modal-starred-repo-name"> </span>
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body" id="tag-modal">
+          <div class="alert alert-success" role="alert">
+            A simple success alert—check it out!
+          </div>
+          <div class="alert alert-danger" role="alert">
+            A simple danger alert—check it out!
+          </div>
+          <%= hidden_input :starred_repo, :id, id: "starred-repo-id" %>
+          <%= text_input :starred_repo, :tags, id: "repo-tags-input" %>
+        </div>
+        <div class="modal-footer">
+          <%= submit "Save", id: "save-tags" %>
+          <%= submit "Cancel", data: [dismiss: "modal"] %>
+        </div>
+    </div>
+  </div>
+</div>

@@ -61,6 +61,18 @@ defmodule GithubStars.StarredRepo do
     |> Repo.preload(:tags)
   end
 
+  def owned_by(user_id, starred_repo_id) do
+    query = from s in __MODULE__, where: s.user_id == ^user_id and s.id == ^starred_repo_id
+
+    case Repo.one(query) do
+      starred_repo = %GithubStars.StarredRepo{} ->
+        {:ok, starred_repo}
+
+      nil ->
+        {:error, "Could not find the starred repo"}
+    end
+  end
+
   defp parse_tags(attrs) do
     (attrs[:tags] || "")
     |> String.split(",")
