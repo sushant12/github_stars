@@ -17,6 +17,8 @@ defmodule GithubStarsWeb.StarredRepoController do
     |> case do
       {:ok, starred_repo} ->
         StarredRepo.update_starred_repo(starred_repo, %{tags: params["tags"]})
+        |> IO.inspect()
+
         json(conn, %{success: true, message: "Tags saved successfully"})
 
       {:error, msg} ->

@@ -45,11 +45,8 @@
         </button>
       </div>
         <div class="modal-body" id="tag-modal">
-          <div class="alert alert-success" role="alert">
+          <div class="alert" id="tags-modal-alert" role="alert">
             A simple success alert—check it out!
-          </div>
-          <div class="alert alert-danger" role="alert">
-            A simple danger alert—check it out!
           </div>
           <%= hidden_input :starred_repo, :id, id: "starred-repo-id" %>
           <%= text_input :starred_repo, :tags, id: "repo-tags-input" %>
