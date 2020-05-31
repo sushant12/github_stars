@@ -15,7 +15,7 @@ config :github_stars, GithubStarsWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "MMExvUgbAxipxs4cC4in1eVCVGSGHw1FP4Z8lzbB1nxI8OOL5wPKevheTS1ulTyB",
   render_errors: [view: GithubStarsWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: GithubStars.PubSub, adapter: Phoenix.PubSub.PG2],
+  pubsub_server: GithubStars.PubSub,
   live_view: [signing_salt: "f6gv2mdz"]
 
 # Configures Elixir's Logger

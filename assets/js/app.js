@@ -45,7 +45,6 @@ saveTagBtn.onclick = async function(e) {
   const hiddenRepoIdInputField = document.getElementById("starred-repo-id");
   const tagsInputField = document.getElementById("repo-tags-input");
   const alertDiv = document.getElementById("tags-modal-alert");
-  let json = await apiReq.json();
   let apiReq = await fetch('starred_repos/' + hiddenRepoIdInputField.value, {
     method: 'PUT',
     headers: {
@@ -53,7 +52,8 @@ saveTagBtn.onclick = async function(e) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({tags: tagsInputField.value})
-  })
+  });
+  let json = await apiReq.json();
 
   alertDiv.className = "alert";
   if(apiReq.ok) {
