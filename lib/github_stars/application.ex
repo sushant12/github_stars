@@ -10,6 +10,7 @@ defmodule GithubStars.Application do
     children = [
       # Start the Ecto repository
       GithubStars.Repo,
+      GithubStarsWeb.Telemetry,
       {Phoenix.PubSub, name: GithubStars.PubSub},
       # Start the endpoint when the application starts
       GithubStarsWeb.Endpoint
