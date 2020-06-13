@@ -5,7 +5,7 @@ defmodule GithubStarsWeb.StarredRepoController do
   def index(conn, params) do
     starred_repos =
       User.get_user_by_username(params["user"])
-      |> StarredRepo.search_starred_repo(params["query"])
+      |> StarredRepo.search_starred_repo(params["query"] || "")
 
     render(conn, "index.html", starred_repos: starred_repos)
   end

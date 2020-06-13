@@ -42,7 +42,7 @@ defmodule GithubStars.StarredRepo do
 
   def create_starred_repos(attrs) do
     Repo.insert_all(__MODULE__, attrs,
-      on_conflict: :replace_all,
+      on_conflict: :nothing,
       conflict_target: [:user_id, :ref_id]
     )
   end
@@ -61,7 +61,7 @@ defmodule GithubStars.StarredRepo do
     |> Repo.preload(:tags)
   end
 
-  def search_starred_repo(user, nil) do
+  def search_starred_repo(user, "") do
     user
     |> Ecto.assoc(:starred_repos)
     |> Repo.all()
@@ -78,7 +78,7 @@ defmodule GithubStars.StarredRepo do
         join: u in User,
         on: u.id == s.user_id,
         where: u.username == ^user.username,
-        where: t.name == ^tag
+        where: ilike(t.name, ^"%#{tag}%")
 
     Repo.all(query) |> Repo.preload(:tags)
   end

@@ -1,4 +1,4 @@
-<%= form_for @conn, Routes.starred_repo_path(@conn, :index, "sushant12"), [method: "get"],fn f -> %>
+<%= form_for @conn, Routes.starred_repo_path(@conn, :index, @conn.params["user"]), [method: "get"],fn f -> %>
   <label>
     <%= text_input f, :query %>
   </label>
