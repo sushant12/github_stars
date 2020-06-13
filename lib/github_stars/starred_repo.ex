@@ -66,10 +66,7 @@ defmodule GithubStars.StarredRepo do
   def search_starred_repo(user, tag) do
     query =
       from s in StarredRepo,
-        join: st in StarredRepoTag,
-        on: st.starred_repo_id == s.id,
-        join: t in Tag,
-        on: t.id == st.tag_id,
+        join: t in assoc(s, :tags),
         join: u in assoc(s, :user),
         where: u.username == ^user.username and ilike(t.name, ^"%#{tag}%"),
         distinct: true
