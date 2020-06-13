@@ -18,11 +18,12 @@ defmodule GithubStars.User do
   end
 
   def create_user(attrs) do
-    %__MODULE__{}
-    |> changeset(attrs)
-    |> Repo.insert(on_conflict: :nothing)
+    {:ok, user} =
+      %__MODULE__{}
+      |> changeset(attrs)
+      |> Repo.insert(on_conflict: :nothing)
 
-    get_user_by_username(attrs["username"])
+    get_user_by_username(user.username)
   end
 
   def get_user_by_username(username), do: Repo.get_by(__MODULE__, username: username)

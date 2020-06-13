@@ -61,12 +61,7 @@ defmodule GithubStars.StarredRepo do
     |> Repo.preload(:tags)
   end
 
-  def search_starred_repo(user, "") do
-    user
-    |> Ecto.assoc(:starred_repos)
-    |> Repo.all()
-    |> Repo.preload(:tags)
-  end
+  def search_starred_repo(user, ""), do: get_starred_repo(user)
 
   def search_starred_repo(user, tag) do
     query =
@@ -75,9 +70,9 @@ defmodule GithubStars.StarredRepo do
         on: st.starred_repo_id == s.id,
         join: t in Tag,
         on: t.id == st.tag_id,
-        join: u in User,
-        on: u.id == s.user_id,
-        where: u.username == ^user.username and ilike(t.name, ^"%#{tag}%")
+        join: u in assoc(s, :user),
+        where: u.username == ^user.username and ilike(t.name, ^"%#{tag}%"),
+        distinct: true
 
     Repo.all(query) |> Repo.preload(:tags)
   end
@@ -92,6 +87,30 @@ defmodule GithubStars.StarredRepo do
       nil ->
         {:error, "Could not find the starred repo"}
     end
+  end
+
+  def build_starred_repos(
+        {:ok, %HTTPoison.Response{status_code: 200, body: body, headers: headers}},
+        user
+      ) do
+    timestamp =
+      NaiveDateTime.utc_now()
+      |> NaiveDateTime.truncate(:second)
+
+    {:ok, body} = Jason.decode(body)
+
+    Enum.map(body, fn repo ->
+      %{
+        name: repo["name"],
+        description: repo["description"],
+        ref_id: repo["id"],
+        github_url: repo["html_url"],
+        language: repo["language"],
+        user_id: user.id,
+        inserted_at: timestamp,
+        updated_at: timestamp
+      }
+    end)
   end
 
   defp parse_tags(attrs) do
