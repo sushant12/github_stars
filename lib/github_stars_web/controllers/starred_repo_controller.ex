@@ -5,7 +5,7 @@ defmodule GithubStarsWeb.StarredRepoController do
   def index(conn, params) do
     starred_repos =
       User.get_user_by_username(params["user"])
-      |> StarredRepo.get_starred_repo()
+      |> StarredRepo.search_starred_repo(params["query"])
 
     render(conn, "index.html", starred_repos: starred_repos)
   end
@@ -16,10 +16,14 @@ defmodule GithubStarsWeb.StarredRepoController do
     StarredRepo.owned_by(user.id, params["id"])
     |> case do
       {:ok, starred_repo} ->
-        StarredRepo.update_starred_repo(starred_repo, %{tags: params["tags"]})
-        |> IO.inspect()
+        {:ok, updated_repo} =
+          StarredRepo.update_starred_repo(starred_repo, %{tags: params["tags"]})
 
-        json(conn, %{success: true, message: "Tags saved successfully"})
+        tags =
+          updated_repo.tags
+          |> Enum.map_join(",", & &1.name)
+
+        json(conn, %{success: true, message: "Tags saved successfully", tags: tags})
 
       {:error, msg} ->
         conn

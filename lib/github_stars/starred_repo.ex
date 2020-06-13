@@ -3,7 +3,7 @@ defmodule GithubStars.StarredRepo do
   import Ecto.Changeset
   import Ecto.Query, only: [from: 2]
 
-  alias GithubStars.{Repo, Tag, User}
+  alias GithubStars.{Repo, Tag, User, StarredRepo, StarredRepoTag}
 
   schema "starred_repos" do
     field :description, :string
@@ -59,6 +59,28 @@ defmodule GithubStars.StarredRepo do
     |> Ecto.assoc(:starred_repos)
     |> Repo.all()
     |> Repo.preload(:tags)
+  end
+
+  def search_starred_repo(user, nil) do
+    user
+    |> Ecto.assoc(:starred_repos)
+    |> Repo.all()
+    |> Repo.preload(:tags)
+  end
+
+  def search_starred_repo(user, tag) do
+    query =
+      from s in StarredRepo,
+        join: st in StarredRepoTag,
+        on: st.starred_repo_id == s.id,
+        join: t in Tag,
+        on: t.id == st.tag_id,
+        join: u in User,
+        on: u.id == s.user_id,
+        where: u.username == ^user.username,
+        where: t.name == ^tag
+
+    Repo.all(query) |> Repo.preload(:tags)
   end
 
   def owned_by(user_id, starred_repo_id) do

@@ -1,3 +1,10 @@
+<%= form_for @conn, Routes.starred_repo_path(@conn, :index, "sushant12"), [method: "get"],fn f -> %>
+  <label>
+    <%= text_input f, :query %>
+  </label>
+  <%= submit "Search" %>
+<% end %>
+
 <table>
   <thead>
     <tr>
@@ -16,7 +23,7 @@
         </td>
         <td><%= starred_repo.description %></td>
         <td><%= starred_repo.language %></td>
-        <td><%= parse_tags(starred_repo.tags) %></td>
+        <td id="<%= starred_repo.name %>-tags"><%= parse_tags(starred_repo.tags) %></td>
         <td>
           <button
             class="starred-repo-edit-btn"

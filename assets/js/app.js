@@ -79,6 +79,11 @@ saveTagBtn.onclick = async function(e) {
     alertDiv.className += " alert-success";
     alertDiv.style.display = "block";
     alertDiv.innerText = json.message;
+    const repoName = document.getElementById("modal-starred-repo-name").innerHTML;
+    const repoTagHolder =  document.getElementById(repoName + "-tags");
+    repoTagHolder.innerHTML = json.tags;
+
+
   } else{
     alertDiv.className += " alert-danger";
     alertDiv.style.display = "block";
