@@ -42,7 +42,7 @@ defmodule GithubStars.StarredRepo do
 
   def create_starred_repos(attrs) do
     Repo.insert_all(__MODULE__, attrs,
-      on_conflict: :nothing,
+      on_conflict: {:replace_all_except, [:id]},
       conflict_target: [:user_id, :ref_id]
     )
   end
@@ -77,8 +77,7 @@ defmodule GithubStars.StarredRepo do
         on: t.id == st.tag_id,
         join: u in User,
         on: u.id == s.user_id,
-        where: u.username == ^user.username,
-        where: ilike(t.name, ^"%#{tag}%")
+        where: u.username == ^user.username and ilike(t.name, ^"%#{tag}%")
 
     Repo.all(query) |> Repo.preload(:tags)
   end
